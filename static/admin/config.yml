@@ -1,0 +1,287 @@
+# Decap CMS. Вход через GitHub (рекомендуемый способ для Netlify, т.к. Git Gateway устарел).
+# ВАЖНО: замените repo на свой: ваш-логин-на-github/название-репозитория
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/YOUR_REPO_NAME
+  branch: main
+
+# Для локальной правки: в папке проекта запустите `npx decap-server`, затем `npx serve dist`
+# и откройте /admin/. На сайте в интернете эта строка ни на что не влияет.
+local_backend: true
+
+locale: ru
+publish_mode: simple
+
+# Загруженные картинки лежат в static/images, на сайте доступны как /images/...
+media_folder: static/images
+public_folder: /images
+
+site_url: https://YOUR-SITE.netlify.app
+display_url: https://YOUR-SITE.netlify.app
+
+collections:
+  - name: pages
+    label: Содержимое сайта
+    editor:
+      preview: false
+    files:
+      # ───────────── Общие настройки ─────────────
+      - name: general
+        label: Общие настройки
+        file: content/general.json
+        format: json
+        fields:
+          - { label: Язык сайта (код), name: lang, widget: string, default: ru }
+          - { label: Заголовок вкладки браузера (SEO), name: title, widget: string }
+          - { label: Описание для поисковиков (SEO), name: description, widget: text }
+          - { label: Текст кнопки в шапке, name: header_button, widget: string }
+          - label: Логотипы в шапке
+            name: logos
+            widget: list
+            summary: "{{fields.alt}}"
+            fields:
+              - { label: Картинка, name: image, widget: image }
+              - { label: Название (alt), name: alt, widget: string }
+              - { label: Ширина, name: width, widget: number, required: false }
+              - { label: Высота, name: height, widget: number, required: false }
+          - { label: Текст в подвале, name: footer_text, widget: string }
+          - label: Контакты в подвале
+            name: footer_contacts
+            widget: list
+            summary: "{{fields.label}} {{fields.phone}}"
+            fields:
+              - { label: Имя, name: label, widget: string }
+              - { label: Телефон, name: phone, widget: string }
+          - { label: Номер WhatsApp для заявок (только цифры, с кодом страны), name: whatsapp_number, widget: string }
+          - { label: ID пикселя Meta (Facebook), name: meta_pixel_id, widget: string, required: false }
+          - { label: Адрес Google-таблицы (веб-приложение Apps Script), name: sheet_url, widget: string, required: false }
+
+      # ───────────── Первый экран ─────────────
+      - name: hero
+        label: Первый экран
+        file: content/hero.json
+        format: json
+        fields:
+          - { label: Главный заголовок, name: title, widget: string }
+          - { label: Вводный текст (**текст** = жирный), name: lead, widget: text }
+          - { label: Кнопка 1, name: button_primary, widget: string }
+          - { label: Кнопка 2, name: button_secondary, widget: string }
+          - label: Ключевые факты
+            name: facts
+            widget: list
+            summary: "{{fields.label}}: {{fields.value}}"
+            fields:
+              - { label: Название, name: label, widget: string }
+              - { label: Значение, name: value, widget: string }
+          - label: Карточка лектора
+            name: portrait
+            widget: object
+            fields:
+              - { label: Фото, name: image, widget: image }
+              - { label: Описание фото (alt), name: alt, widget: string }
+              - { label: Имя, name: name, widget: string }
+              - { label: Степень / должность, name: title, widget: string }
+              - { label: Место работы, name: affiliation, widget: string }
+              - { label: Заголовок списка образования, name: degrees_title, widget: string }
+              - label: Образование
+                name: degrees
+                widget: list
+                summary: "{{fields.degree}}"
+                fields:
+                  - { label: Степень, name: degree, widget: string }
+                  - { label: Учебное заведение, name: institution, widget: string }
+
+      # ───────────── О лекторе ─────────────
+      - name: lecturer
+        label: О лекторе
+        file: content/lecturer.json
+        format: json
+        fields:
+          - { label: Фото, name: photo, widget: image }
+          - { label: Описание фото (alt), name: photo_alt, widget: string }
+          - { label: Заголовок, name: heading, widget: string }
+          - { label: Должность, name: role, widget: string }
+          - { label: Место работы, name: university, widget: string }
+          - { label: Цитата, name: quote, widget: text }
+          - label: Три блока под фото
+            name: pillars
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Текст, name: text, widget: text }
+
+      # ───────────── Видео ─────────────
+      - name: clips
+        label: Видео «Так проходят занятия»
+        file: content/clips.json
+        format: json
+        fields:
+          - { label: Заголовок, name: heading, widget: string }
+          - { label: Вводный текст, name: intro, widget: text }
+          - label: Пункты списка (нумеруются сами)
+            name: items
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Текст, name: text, widget: text }
+          - { label: Плашка на видео, name: badge, widget: string }
+          - { label: Подпись на кнопке «Смотреть», name: play_label, widget: string }
+          - label: Видео (mp4)
+            name: video
+            widget: file
+            media_folder: /static/video
+            public_folder: /video
+            choose_url: false
+            hint: "Лучше до 20–30 МБ, вертикальный формат 9:16"
+          - { label: Обложка видео, name: poster, widget: image }
+
+      # ───────────── Расписание ─────────────
+      - name: schedule
+        label: Расписание (4 дня)
+        file: content/schedule.json
+        format: json
+        fields:
+          - { label: Заголовок, name: heading, widget: string }
+          - { label: Вводный текст, name: intro, widget: text }
+          - { label: Подпись над днями семинара 1, name: group_1, widget: string }
+          - { label: Подпись над днями семинара 2, name: group_2, widget: string }
+          - label: Дни
+            name: days
+            widget: list
+            summary: "{{fields.number}} {{fields.weekday}}"
+            fields:
+              - { label: Число, name: number, widget: string }
+              - { label: Месяц и день недели, name: weekday, widget: string }
+              - { label: Время, name: time, widget: string }
+              - label: Цвет полоски
+                name: type
+                widget: select
+                options:
+                  - { label: Семинар 1 (оранжевая), value: spine }
+                  - { label: Семинар 2 (синяя), value: shoulder }
+
+      # ───────────── Программа и цены ─────────────
+      - name: seminars
+        label: Программа семинаров и цены
+        file: content/seminars.json
+        format: json
+        fields:
+          - { label: Заголовок раздела, name: heading, widget: string }
+          - { label: Вводный текст, name: intro, widget: text }
+          - label: Семинары
+            name: items
+            widget: list
+            summary: "{{fields.title}}"
+            min: 2
+            max: 2
+            fields:
+              - label: Какой это семинар (не менять)
+                name: type
+                widget: select
+                options:
+                  - { label: Семинар 1 (оранжевая карточка), value: spine }
+                  - { label: Семинар 2 (синяя карточка), value: shoulder }
+              - { label: Название, name: title, widget: string }
+              - { label: Даты и место, name: meta, widget: string }
+              - label: Программа
+                name: program
+                widget: list
+                summary: "{{fields.text}}"
+                fields:
+                  - { label: Пункт, name: text, widget: string }
+                  - { label: Выделить цветом, name: highlight, widget: boolean, default: false, required: false }
+                  - { label: Пояснение (только для выделенного пункта), name: details, widget: text, required: false }
+              - label: Цены
+                name: prices
+                widget: list
+                summary: "{{fields.amount}} {{fields.label}}"
+                fields:
+                  - { label: Сумма, name: amount, widget: string }
+                  - { label: Подпись, name: label, widget: string }
+              - { label: Текст кнопки, name: button, widget: string }
+          - label: Специальное предложение (оба семинара)
+            name: offer
+            widget: object
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Текст, name: text, widget: string }
+              - { label: Цена, name: price, widget: string }
+              - { label: Старая цена (зачёркнутая), name: old_price, widget: string }
+              - { label: Плашка «Экономия», name: badge, widget: string }
+              - { label: Текст кнопки, name: button, widget: string }
+
+      # ───────────── Для кого ─────────────
+      - name: audience
+        label: Для кого семинары
+        file: content/audience.json
+        format: json
+        fields:
+          - { label: Заголовок, name: heading, widget: string }
+          - { label: Вводный текст, name: intro, widget: string }
+          - { label: Список, name: items, widget: list, field: { label: Специалисты, name: item, widget: string } }
+
+      # ───────────── Форма записи ─────────────
+      - name: registration
+        label: Форма записи и календарь
+        file: content/registration.json
+        format: json
+        fields:
+          - { label: Заголовок, name: heading, widget: string }
+          - { label: Вводный текст, name: intro, widget: text }
+          - { label: Контакт: имя, name: contact_name, widget: string }
+          - { label: Контакт: телефон, name: contact_phone, widget: string }
+          - { label: Заголовок выбора семинара, name: plan_legend, widget: string }
+          - label: Варианты записи (3 штуки)
+            name: plans
+            widget: list
+            summary: "{{fields.title}}"
+            min: 3
+            max: 3
+            fields:
+              - label: Код варианта (не менять)
+                name: key
+                widget: select
+                options:
+                  - { label: Семинар 1, value: spine }
+                  - { label: Семинар 2, value: shoulder }
+                  - { label: Оба семинара, value: both }
+              - { label: Название в форме, name: title, widget: string }
+              - { label: Подпись (даты), name: subtitle, widget: string }
+              - { label: Цена в форме, name: price_label, widget: string }
+              - { label: Выбран по умолчанию, name: checked, widget: boolean, default: false, required: false }
+              - { label: Текст для сообщения в WhatsApp, name: whatsapp_text, widget: text }
+              - { label: Название в Google-таблице, name: sheet_name, widget: string }
+              - { label: Название события в календаре, name: calendar_title, widget: string }
+              - { label: Первый день (для календаря), name: calendar_start, widget: date, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false, picker_utc: true }
+              - { label: Сколько дней длится, name: calendar_days, widget: number, value_type: int, min: 1, max: 14 }
+          - { label: Список специальностей, name: professions, widget: list, field: { label: Специальность, name: item, widget: string } }
+          - label: Подписи полей формы
+            name: labels
+            widget: object
+            fields:
+              - { label: Имя и фамилия, name: name, widget: string }
+              - { label: Телефон, name: phone, widget: string }
+              - { label: Подсказка в телефоне, name: phone_placeholder, widget: string }
+              - { label: Email, name: email, widget: string }
+              - { label: Подсказка к email, name: email_hint, widget: string }
+              - { label: Специальность, name: profession, widget: string }
+              - { label: Подсказка в списке специальностей, name: profession_placeholder, widget: string }
+              - { label: Комментарий, name: message, widget: string }
+              - { label: Подсказка к комментарию, name: message_hint, widget: string }
+          - { label: Текст ошибки в форме, name: error_text, widget: text }
+          - { label: Текст кнопки «Отправить», name: send_button, widget: string }
+          - { label: Текст «Отправляем…», name: saving_text, widget: string }
+          - { label: Сообщение после успешной отправки, name: status_text, widget: text }
+          - { label: Сообщение при ошибке отправки, name: save_error_text, widget: text }
+          - { label: Кнопка WhatsApp (после отправки), name: whatsapp_button, widget: string }
+          - { label: Первая строка сообщения в WhatsApp, name: whatsapp_intro, widget: string }
+          - { label: Текст про календарь (**текст** = жирный), name: calendar_text, widget: text }
+          - { label: Кнопка календаря, name: calendar_button, widget: string }
+          - { label: Начало занятий (например 10:00), name: calendar_time_start, widget: string }
+          - { label: Конец занятий (например 17:00), name: calendar_time_end, widget: string }
+          - { label: Часовой пояс календаря, name: calendar_timezone, widget: string, default: Europe/Prague }
+          - { label: Место для календаря, name: calendar_location, widget: string }
+          - { label: Описание события в календаре, name: calendar_details, widget: text }
+          - { label: Примечание под формой, name: note, widget: text }

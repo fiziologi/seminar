@@ -1,0 +1,11 @@
+{
+  "name": "peter-hodulov-seminars",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Лендинг семинаров с админкой Decap CMS",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node build.js && npx serve dist",
+    "cms": "npx decap-server"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "lang": "ru",
+  "title": "Семинары Peter Hodulov в Праге, 17–20 декабря 2026: позвоночник и плечо",
+  "description": "Два практических семинара по физической реабилитации в Праге: протрузия и грыжа позвоночника (17–18.12) и адгезивный капсулит «замороженное плечо» (19–20.12). Ведёт Peter Hodulov, MSc, PT.",
+  "header_button": "Записаться",
+  "logos": [
+    {
+      "image": "/images/logo-kinesio.png",
+      "alt": "Kinesio Group",
+      "width": 44,
+      "height": 44
+    },
+    {
+      "image": "/images/logo-algo.png",
+      "alt": "Algo SPA Baltic",
+      "width": 65,
+      "height": 44
+    }
+  ],
+  "footer_text": "Kinesio Group и Algo SPA Baltic. Прага, Чехия, 17–20 декабря 2026.",
+  "footer_contacts": [
+    {
+      "label": "Ольга",
+      "phone": "+420 770 665 626"
+    },
+    {
+      "label": "Мария",
+      "phone": "+371 22354197"
+    }
+  ],
+  "meta_pixel_id": "1824160768125383",
+  "sheet_url": "https://script.google.com/macros/s/AKfycbwY0I-aq_I7uX1tOqSBFoEzTGaNo7Dk7_3giwBhW9VC9p_ZlSds9gOMbgfTVbNlZ40PIA/exec",
+  "whatsapp_number": "420770665626"
+}
