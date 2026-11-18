@@ -230,8 +230,8 @@ collections:
         fields:
           - { label: Заголовок, name: heading, widget: string }
           - { label: Вводный текст, name: intro, widget: text }
-          - { label: Контакт: имя, name: contact_name, widget: string }
-          - { label: Контакт: телефон, name: contact_phone, widget: string }
+          - { label: "Контакт: имя", name: contact_name, widget: string }
+          - { label: "Контакт: телефон", name: contact_phone, widget: string }
           - { label: Заголовок выбора семинара, name: plan_legend, widget: string }
           - label: Варианты записи (3 штуки)
             name: plans
