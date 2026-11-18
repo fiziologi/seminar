@@ -2,7 +2,7 @@
 # ВАЖНО: замените repo на свой: ваш-логин-на-github/название-репозитория
 backend:
   name: github
-  repo: YOUR_GITHUB_USERNAME/YOUR_REPO_NAME
+  repo: fiziologi/seminar
   branch: main
 
 # Для локальной правки: в папке проекта запустите `npx decap-server`, затем `npx serve dist`
@@ -16,8 +16,8 @@ publish_mode: simple
 media_folder: static/images
 public_folder: /images
 
-site_url: https://YOUR-SITE.netlify.app
-display_url: https://YOUR-SITE.netlify.app
+site_url: https://seminarkinesiogroup.netlify.app/
+display_url: https://seminarkinesiogroup.netlify.app/
 
 collections:
   - name: pages
