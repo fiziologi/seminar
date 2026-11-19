@@ -53,7 +53,7 @@
   "labels": {
     "phone_placeholder": "+420…",
     "message": "Комментарий",
-    "email_hint": "(для доступа к видео материалам)",
+    "email_hint": "    ",
     "name": "Имя и фамилия",
     "phone": "Телефон",
     "profession_placeholder": "Выберите",
