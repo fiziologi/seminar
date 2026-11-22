@@ -2,7 +2,7 @@
 # ВАЖНО: замените repo на свой: ваш-логин-на-github/название-репозитория
 backend:
   name: github
-  repo: fiziologi/seminar
+  repo: YOUR_GITHUB_USERNAME/YOUR_REPO_NAME
   branch: main
 
 # Для локальной правки: в папке проекта запустите `npx decap-server`, затем `npx serve dist`
@@ -16,8 +16,8 @@ publish_mode: simple
 media_folder: static/images
 public_folder: /images
 
-site_url: https://seminarkinesiogroup.netlify.app/
-display_url: https://seminarkinesiogroup.netlify.app/
+site_url: https://seminarkinesiogroup.netlify.app
+display_url: https://seminarkinesiogroup.netlify.app
 
 collections:
   - name: pages
@@ -25,6 +25,33 @@ collections:
     editor:
       preview: false
     files:
+      # ───────────── Цвета сайта ─────────────
+      - name: theme
+        label: Цвета сайта
+        file: content/theme.json
+        format: json
+        fields:
+          - { label: "Тёмный (фон тёмных блоков и текст)", name: dark, widget: color, default: "#0B1D31" }
+          - { label: "Ещё темнее (подвал, градиенты)", name: dark_deep, widget: color, default: "#07131F" }
+          - { label: "Фон страницы", name: paper, widget: color, default: "#F4F7FA" }
+          - { label: "Акцент: синий (ссылки, кнопки)", name: blue, widget: color, default: "#1F66B0" }
+          - { label: "Акцент: оранжевый (цены, выделение)", name: signal, widget: color, default: "#E8653A" }
+
+      # ───────────── Какие блоки показывать ─────────────
+      - name: layout
+        label: Какие блоки показывать
+        file: content/layout.json
+        format: json
+        fields:
+          - { label: "Первый экран (заголовок и портрет)", name: hero, widget: boolean, default: true, required: false }
+          - { label: "Лектор", name: lecturer, widget: boolean, default: true, required: false }
+          - { label: "Видео", name: clips, widget: boolean, default: true, required: false }
+          - { label: "Расписание", name: schedule, widget: boolean, default: true, required: false }
+          - { label: "Программа семинаров", name: seminars, widget: boolean, default: true, required: false }
+          - { label: "Специальное предложение (оба семинара)", name: offer, widget: boolean, default: true, required: false }
+          - { label: "Для кого", name: audience, widget: boolean, default: true, required: false }
+          - { label: "Форма записи (если выключить, пропадут и кнопки, которые к ней ведут)", name: registration, widget: boolean, default: true, required: false }
+
       # ───────────── Общие настройки ─────────────
       - name: general
         label: Общие настройки
@@ -126,7 +153,7 @@ collections:
             fields:
               - { label: Заголовок, name: title, widget: string }
               - { label: Текст, name: text, widget: text }
-          - { label: Плашка на видео, name: badge, widget: string }
+          - { label: Плашка на видео, name: badge, widget: string, required: false }
           - { label: Подпись на кнопке «Смотреть», name: play_label, widget: string }
           - label: Видео (mp4)
             name: video
@@ -196,6 +223,7 @@ collections:
               - label: Цены
                 name: prices
                 widget: list
+                required: false
                 summary: "{{fields.amount}} {{fields.label}}"
                 fields:
                   - { label: Сумма, name: amount, widget: string }
@@ -207,8 +235,8 @@ collections:
             fields:
               - { label: Заголовок, name: title, widget: string }
               - { label: Текст, name: text, widget: string }
-              - { label: Цена, name: price, widget: string }
-              - { label: Старая цена (зачёркнутая), name: old_price, widget: string }
+              - { label: Цена, name: price, widget: string, required: false }
+              - { label: Старая цена (зачёркнутая), name: old_price, widget: string, required: false }
               - { label: Плашка «Экономия», name: badge, widget: string }
               - { label: Текст кнопки, name: button, widget: string }
 
@@ -249,7 +277,7 @@ collections:
                   - { label: Оба семинара, value: both }
               - { label: Название в форме, name: title, widget: string }
               - { label: Подпись (даты), name: subtitle, widget: string }
-              - { label: Цена в форме, name: price_label, widget: string }
+              - { label: Цена в форме, name: price_label, widget: string, required: false }
               - { label: Выбран по умолчанию, name: checked, widget: boolean, default: false, required: false }
               - { label: Текст для сообщения в WhatsApp, name: whatsapp_text, widget: text }
               - { label: Название в Google-таблице, name: sheet_name, widget: string }
