@@ -1,0 +1,10 @@
+{
+  "hero": true,
+  "lecturer": true,
+  "clips": true,
+  "schedule": true,
+  "seminars": true,
+  "offer": true,
+  "audience": true,
+  "registration": true
+}
