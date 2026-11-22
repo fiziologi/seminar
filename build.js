@@ -27,6 +27,23 @@ const sched = read('schedule');
 const sem = read('seminars');
 const aud = read('audience');
 const reg = read('registration');
+let layout = {};
+try { layout = read('layout'); } catch (e) { layout = {}; }
+const show = (k) => layout[k] !== false; /* блок показывается, пока в админке не выключен */
+let theme = {};
+try { theme = read('theme'); } catch (e) { theme = {}; }
+
+/* ---------- цвета из админки (меняются только те, что отличаются от стандартных) ---------- */
+const THEME_DEFAULT = { dark: '#0B1D31', dark_deep: '#07131F', paper: '#F4F7FA', blue: '#1F66B0', signal: '#E8653A' };
+const hex = (v) => (/^#[0-9a-fA-F]{6}$/.test(String(v || '').trim()) ? String(v).trim() : '');
+const tv = (k) => { const c = hex(theme[k]); return c && c.toLowerCase() !== THEME_DEFAULT[k].toLowerCase() ? c : ''; };
+const themeVars = [];
+if (tv('dark')) themeVars.push(`--navy:${tv('dark')}`, `--ink:${tv('dark')}`);
+if (tv('dark_deep')) themeVars.push(`--navy-deep:${tv('dark_deep')}`);
+if (tv('paper')) themeVars.push(`--paper:${tv('paper')}`);
+if (tv('blue')) themeVars.push(`--blue:${tv('blue')}`, `--blue-tint:color-mix(in srgb,${tv('blue')} 12%,#fff)`);
+if (tv('signal')) themeVars.push(`--signal:${tv('signal')}`, `--signal-ink:color-mix(in srgb,${tv('signal')} 75%,#000)`, `--signal-tint:color-mix(in srgb,${tv('signal')} 12%,#fff)`);
+const themeStyle = themeVars.length ? `<style>:root{${themeVars.join(';')}}</style>` : '';
 
 /* ---------- блоки страницы ---------- */
 const header = `
@@ -35,7 +52,7 @@ const header = `
     <div class="brands">
 ${list(g.logos).map((l) => `      <img src="${esc(l.image)}" alt="${esc(l.alt)}"${attrNum('width', l.width)}${attrNum('height', l.height)}>`).join('\n')}
     </div>
-    <a class="btn btn-copper btn-small" href="#register">${esc(g.header_button)}</a>
+    ${show('registration') ? `<a class="btn btn-copper btn-small" href="#register">${esc(g.header_button)}</a>` : ''}
   </div>
 </header>`;
 
@@ -47,8 +64,8 @@ const heroSec = `
       <h1>${esc(hero.title)}</h1>
       <p class="lead">${rich(hero.lead)}</p>
       <div class="hero-actions">
-        <a class="btn btn-copper" href="#register">${esc(hero.button_primary)}</a>
-        <a class="btn btn-ghost" href="#program">${esc(hero.button_secondary)}</a>
+        ${show('registration') ? `<a class="btn btn-copper" href="#register">${esc(hero.button_primary)}</a>` : ''}
+        ${show('schedule') ? `<a class="btn btn-ghost" href="#program">${esc(hero.button_secondary)}</a>` : ''}
       </div>
       <dl class="facts">
 ${list(hero.facts).map((f) => `        <div><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('\n')}
@@ -145,22 +162,22 @@ ${list(sem.items).map((s) => `      <article class="sem ${kind(s.type)}">
 ${list(s.program).map(programItem).join('\n')}
         </ul>
         <div class="sem-foot">
-          <div class="prices">
+${list(s.prices).length ? `          <div class="prices">
 ${list(s.prices).map((x) => `            <div class="price"><b>${esc(x.amount)}</b><span>${esc(x.label)}</span></div>`).join('\n')}
-          </div>
-          <button class="btn btn-primary" type="button" data-pick="${kind(s.type)}">${esc(s.button)}</button>
+          </div>` : ''}
+          ${show('registration') ? `<button class="btn btn-primary" type="button" data-pick="${kind(s.type)}">${esc(s.button)}</button>` : ''}
         </div>
       </article>`).join('\n\n')}
     </div>
 
-    <div class="offer">
+${show('offer') ? `    <div class="offer">
       <div>
         <h3>${esc(sem.offer.title)}</h3>
         <p>${esc(sem.offer.text)}</p>
-        <div class="offer-price"><b>${esc(sem.offer.price)}</b><s>${esc(sem.offer.old_price)}</s><span>${esc(sem.offer.badge)}</span></div>
+${sem.offer.price ? `        <div class="offer-price"><b>${esc(sem.offer.price)}</b>${sem.offer.old_price ? `<s>${esc(sem.offer.old_price)}</s>` : ''}${sem.offer.badge ? `<span>${esc(sem.offer.badge)}</span>` : ''}</div>` : ''}
       </div>
-      <button class="btn btn-copper" type="button" data-pick="both">${esc(sem.offer.button)}</button>
-    </div>
+      ${show('registration') ? `<button class="btn btn-copper" type="button" data-pick="both">${esc(sem.offer.button)}</button>` : ''}
+    </div>` : ''}
   </div>
 </section>`;
 
@@ -192,7 +209,7 @@ const registerSec = `
     <form class="form" id="form" novalidate>
       <fieldset class="field">
         <legend>${esc(reg.plan_legend)}</legend>
-${plansList.map((x, i) => `        <label class="opt"><input type="radio" name="plan" value="${esc(x.key)}"${x.checked || (!hasChecked && i === 0) ? ' checked' : ''}><span><b>${esc(x.title)}</b><small>${esc(x.subtitle)}</small></span><span class="p">${esc(x.price_label)}</span></label>`).join('\n')}
+${plansList.map((x, i) => `        <label class="opt"><input type="radio" name="plan" value="${esc(x.key)}"${x.checked || (!hasChecked && i === 0) ? ' checked' : ''}><span><b>${esc(x.title)}</b><small>${esc(x.subtitle)}</small></span>${x.price_label ? `<span class="p">${esc(x.price_label)}</span>` : ''}</label>`).join('\n')}
       </fieldset>
 
       <div class="row2">
@@ -281,19 +298,20 @@ const html = `<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
+${themeStyle}
 </head>
 <body>
 ${pixelNoscript}
 ${header}
 
 <main>
-${heroSec}
-${lecturerSec}
-${clipsSec}
-${scheduleSec}
-${seminarsSec}
-${audienceSec}
-${registerSec}
+${show('hero') ? heroSec : ''}
+${show('lecturer') ? lecturerSec : ''}
+${show('clips') ? clipsSec : ''}
+${show('schedule') ? scheduleSec : ''}
+${show('seminars') ? seminarsSec : ''}
+${show('audience') ? audienceSec : ''}
+${show('registration') ? registerSec : ''}
 </main>
 ${footer}
 
