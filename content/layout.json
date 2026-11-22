@@ -5,6 +5,6 @@
   "schedule": true,
   "seminars": true,
   "offer": true,
-  "audience": true,
+  "audience": false,
   "registration": true
 }
